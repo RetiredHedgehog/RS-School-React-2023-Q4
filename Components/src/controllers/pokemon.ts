@@ -7,7 +7,7 @@ const getAllPokemons = async (): Promise<NamedEndpointResponse<Pokemon>> => {
   const response: Response = await fetch(
     `${baseUrl}/pokemon/?${new URLSearchParams({
       offset: '0',
-      limit: '99999',
+      limit: Number.MAX_SAFE_INTEGER.toString(),
     })}`
   );
 
