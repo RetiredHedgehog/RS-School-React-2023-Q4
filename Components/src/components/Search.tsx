@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import pokemonController from '../controllers/pokemon';
+import pokemonController from '../services/pokemon';
 import PokemonSearchTerms from './PokemonSearchTerms';
 
 const saveSearchText = (text: string): void => {
