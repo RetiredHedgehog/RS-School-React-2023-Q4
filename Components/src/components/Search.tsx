@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import pokemonServices from '../services/pokemon';
-import PokemonSearchTerms from './PokemonSearchTerms';
+import SearchTerms from './SearchTerms';
+import SearchTypeSelect from './SearchTypeSelect';
+import SearchInput from './SearchInput';
+import SearchButton from './SearchButton';
 
 const saveToLocalStorage = (key: string, value: string): void => {
   localStorage.setItem(key, value);
@@ -90,25 +93,18 @@ class Search extends Component {
   render() {
     return (
       <div>
-        <select
-          value={this.state.searchType}
+        <SearchTypeSelect
+          searchType={this.state.searchType}
+          selectValues={selectValues}
           onChange={this.handleSearchTypeChange}
-        >
-          {selectValues.map((value, index) => (
-            <option key={index} value={value.toLowerCase()}>
-              {value}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          placeholder="Enter pokemon, move or type..."
-          list={this.datalistId}
-          value={this.state.searchText}
-          onChange={(e) => this.handleSearchTextChange(e)}
         />
-        <button onClick={this.handleSearchButtonClick}>Search</button>
-        <PokemonSearchTerms
+        <SearchInput
+          datalistId={this.datalistId}
+          searchText={this.state.searchText}
+          onChange={this.handleSearchTextChange}
+        />
+        <SearchButton onClick={this.handleSearchButtonClick} />
+        <SearchTerms
           values={
             this.state.searchTerms[this.state.searchType.toLowerCase()] || null
           }

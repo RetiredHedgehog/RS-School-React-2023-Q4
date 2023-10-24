@@ -5,7 +5,7 @@ type Props = {
   id: string;
 };
 
-class PokemonSearchTerms extends Component<Props> {
+class SearchTerms extends Component<Props> {
   render() {
     return (
       <datalist id={this.props.id}>
@@ -17,4 +17,4 @@ class PokemonSearchTerms extends Component<Props> {
   }
 }
 
-export default PokemonSearchTerms;
+export default SearchTerms;
