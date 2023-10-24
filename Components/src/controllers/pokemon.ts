@@ -11,6 +11,10 @@ const getAllPokemons = async (): Promise<NamedEndpointResponse<Pokemon>> => {
     })}`
   );
 
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`);
+  }
+
   return await response.json();
 };
 
