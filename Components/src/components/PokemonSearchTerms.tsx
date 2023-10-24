@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 type Props = {
-  names: string[] | null;
+  values: string[] | null;
   id: string;
 };
 
@@ -9,8 +9,8 @@ class PokemonSearchTerms extends Component<Props> {
   render() {
     return (
       <datalist id={this.props.id}>
-        {this.props.names?.map((name, index) => {
-          return <option key={index} value={name} />;
+        {this.props.values?.map((value, index) => {
+          return <option key={index} value={value} />;
         })}
       </datalist>
     );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import pokemonController from '../services/pokemon';
+import pokemonServices from '../services/pokemon';
 import PokemonSearchTerms from './PokemonSearchTerms';
 
 const saveToLocalStorage = (key: string, value: string): void => {
@@ -32,14 +32,16 @@ const selectValues = ['Pokemon', 'Move', 'Type'];
 type State = {
   searchText: string;
   searchType: string;
-  pokemonNames: string[] | null;
+  searchTerms: {
+    [key: string]: string[];
+  };
 };
 
 class Search extends Component {
   state: State = {
     searchText: getSearchText(),
     searchType: getSearchType(),
-    pokemonNames: null,
+    searchTerms: {},
   };
   datalistId = 'pokemon-search-terms';
 
@@ -50,9 +52,6 @@ class Search extends Component {
   };
 
   handleSearchTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    saveSearchText('');
-    saveSearchType(e.target.value);
-
     this.setState({
       searchType: e.target.value,
       searchText: '',
@@ -61,13 +60,30 @@ class Search extends Component {
 
   handleSearchButtonClick = () => {
     saveSearchText(this.state.searchText || '');
+    saveSearchType(this.state.searchType);
   };
 
   async componentDidMount(): Promise<void> {
-    const pokemons = await pokemonController.getAllPokemons();
-    const names = pokemons.results.map((pokemon) => pokemon.name);
+    const [pokemons, moves] = await Promise.allSettled([
+      pokemonServices.getAllPokemons(),
+      pokemonServices.getAllMoves(),
+    ]);
+
+    //  TODO: refactor, if type also hase 'name' property
+    const namesPokemon =
+      pokemons.status === 'fulfilled'
+        ? pokemons.value.results.map((pokemon) => pokemon.name)
+        : [];
+    const namesMoves =
+      moves.status === 'fulfilled'
+        ? moves.value.results.map((move) => move.name)
+        : [];
+
     this.setState({
-      pokemonNames: names || null,
+      searchTerms: {
+        pokemon: namesPokemon,
+        move: namesMoves,
+      },
     });
   }
 
@@ -93,7 +109,9 @@ class Search extends Component {
         />
         <button onClick={this.handleSearchButtonClick}>Search</button>
         <PokemonSearchTerms
-          names={this.state.pokemonNames}
+          values={
+            this.state.searchTerms[this.state.searchType.toLowerCase()] || null
+          }
           id={this.datalistId}
         />
       </div>
