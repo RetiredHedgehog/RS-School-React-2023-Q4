@@ -68,8 +68,8 @@ class Search extends Component {
 
   async componentDidMount(): Promise<void> {
     const [pokemons, moves] = await Promise.allSettled([
-      pokemonServices.getAllPokemons(),
-      pokemonServices.getAllMoves(),
+      pokemonServices.getPokemons(),
+      pokemonServices.getMoves(),
     ]);
 
     //  TODO: refactor, if type also hase 'name' property

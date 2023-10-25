@@ -6,7 +6,7 @@ const baseUrl = 'https://pokeapi.co/api/v2';
 const DEFAULT_OFFSET = 0;
 const DEFAULT_LIMIT = Number.MAX_SAFE_INTEGER;
 
-const getAllPokemons = async (
+const getPokemons = async (
   offset = DEFAULT_OFFSET,
   limit = DEFAULT_LIMIT
 ): Promise<NamedEndpointResponse<Pokemon>> => {
@@ -25,7 +25,7 @@ const getAllPokemons = async (
   return await response.json();
 };
 
-const getAllMoves = async (
+const getMoves = async (
   offset = DEFAULT_OFFSET,
   limit = DEFAULT_LIMIT
 ): Promise<NamedEndpointResponse<Move>> => {
@@ -44,6 +44,6 @@ const getAllMoves = async (
 };
 
 export default {
-  getAllPokemons,
-  getAllMoves,
+  getPokemons,
+  getMoves,
 };
