@@ -3,12 +3,17 @@ import Pokemon from '../types/pokemon';
 import Move from '../types/move';
 
 const baseUrl = 'https://pokeapi.co/api/v2';
+const DEFAULT_OFFSET = 0;
+const DEFAULT_LIMIT = Number.MAX_SAFE_INTEGER;
 
-const getAllPokemons = async (): Promise<NamedEndpointResponse<Pokemon>> => {
+const getAllPokemons = async (
+  offset = DEFAULT_OFFSET,
+  limit = DEFAULT_LIMIT
+): Promise<NamedEndpointResponse<Pokemon>> => {
   const response: Response = await fetch(
     `${baseUrl}/pokemon/?${new URLSearchParams({
-      offset: '0',
-      limit: Number.MAX_SAFE_INTEGER.toString(),
+      offset: offset.toString(),
+      limit: limit.toString(),
     })}`
   );
 
@@ -20,11 +25,14 @@ const getAllPokemons = async (): Promise<NamedEndpointResponse<Pokemon>> => {
   return await response.json();
 };
 
-const getAllMoves = async (): Promise<NamedEndpointResponse<Move>> => {
+const getAllMoves = async (
+  offset = DEFAULT_OFFSET,
+  limit = DEFAULT_LIMIT
+): Promise<NamedEndpointResponse<Move>> => {
   const response: Response = await fetch(
     `${baseUrl}/move/?${new URLSearchParams({
-      offset: '0',
-      limit: Number.MAX_SAFE_INTEGER.toString(),
+      offset: offset.toString(),
+      limit: limit.toString(),
     })}`
   );
 
