@@ -1,6 +1,7 @@
 import NamedEndpointResponse from '../types/namedEndpointResponse';
 import Pokemon from '../types/pokemon';
 import Move from '../types/move';
+import Type from '../types/type';
 
 const baseUrl = 'https://pokeapi.co/api/v2';
 const DEFAULT_OFFSET = 0;
@@ -43,7 +44,26 @@ const getMoves = async (
   return await response.json();
 };
 
+const getTypes = async (
+  offset = DEFAULT_OFFSET,
+  limit = DEFAULT_LIMIT
+): Promise<NamedEndpointResponse<Type>> => {
+  const response: Response = await fetch(
+    `${baseUrl}/type/?${new URLSearchParams({
+      offset: offset.toString(),
+      limit: limit.toString(),
+    })}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`);
+  }
+
+  return await response.json();
+};
+
 export default {
   getPokemons,
   getMoves,
+  getTypes,
 };

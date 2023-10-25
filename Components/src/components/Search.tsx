@@ -66,31 +66,34 @@ class Search extends Component {
     saveSearchType(this.state.searchType);
   };
 
+  setNames = async () => {
+    const methods = [
+      pokemonServices.getPokemons,
+      pokemonServices.getMoves,
+      pokemonServices.getTypes,
+    ];
+
+    for (let i = 0; i < methods.length; i++) {
+      const response = await methods[i]();
+      const names = response.results.map((elem) => elem.name);
+
+      this.setState({
+        searchTerms: {
+          ...this.state.searchTerms,
+          [selectValues[i].toLowerCase()]: names,
+        },
+      });
+    }
+  };
+
   async componentDidMount(): Promise<void> {
-    const [pokemons, moves] = await Promise.allSettled([
-      pokemonServices.getPokemons(),
-      pokemonServices.getMoves(),
-    ]);
-
-    //  TODO: refactor, if type also hase 'name' property
-    const namesPokemon =
-      pokemons.status === 'fulfilled'
-        ? pokemons.value.results.map((pokemon) => pokemon.name)
-        : [];
-    const namesMoves =
-      moves.status === 'fulfilled'
-        ? moves.value.results.map((move) => move.name)
-        : [];
-
-    this.setState({
-      searchTerms: {
-        pokemon: namesPokemon,
-        move: namesMoves,
-      },
-    });
+    this.setNames();
   }
 
   render() {
+    const searchTerms =
+      this.state.searchTerms[this.state.searchType.toLowerCase()] || null;
+
     return (
       <div>
         <SearchTypeSelect
@@ -104,12 +107,7 @@ class Search extends Component {
           onChange={this.handleSearchTextChange}
         />
         <SearchButton onClick={this.handleSearchButtonClick} />
-        <SearchTerms
-          values={
-            this.state.searchTerms[this.state.searchType.toLowerCase()] || null
-          }
-          id={this.datalistId}
-        />
+        <SearchTerms values={searchTerms} id={this.datalistId} />
       </div>
     );
   }
