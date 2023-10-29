@@ -26,6 +26,17 @@ const getPokemons = async (
   return await response.json();
 };
 
+const getPokemon = async (pokemon: string): Promise<Pokemon> => {
+  const url = `${baseUrl}/pokemon/${pokemon}`;
+  const response: Response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`);
+  }
+
+  return await response.json();
+};
+
 const getMoves = async (
   offset = DEFAULT_OFFSET,
   limit = DEFAULT_LIMIT
@@ -36,6 +47,17 @@ const getMoves = async (
       limit: limit.toString(),
     })}`
   );
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`);
+  }
+
+  return await response.json();
+};
+
+const getMove = async (move: string): Promise<Move> => {
+  const url = `${baseUrl}/move/${move}`;
+  const response: Response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`Request failed with status code ${response.status}`);
@@ -62,8 +84,22 @@ const getTypes = async (
   return await response.json();
 };
 
+const getType = async (type: string): Promise<Type> => {
+  const url = `${baseUrl}/type/${type}`;
+  const response: Response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`);
+  }
+
+  return await response.json();
+};
+
 export default {
   getPokemons,
+  getPokemon,
   getMoves,
+  getMove,
   getTypes,
+  getType,
 };

@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import NamedEndpointResponse from '../types/namedEndpointResponse';
 import NamedApiResource from '../types/namedAPIResource';
-import pokemonServise from '../services/pokemon';
 import Pokemon from '../types/pokemon';
 import DisplayPokemon from './DisplayPokemon';
 
@@ -17,10 +16,6 @@ class Display extends Component<Props, State> {
   state = {
     pokemonData: null,
   };
-
-  async getpokemonData(name: string) {
-    return await pokemonServise.getPokemon(name);
-  }
 
   render() {
     return (

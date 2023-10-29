@@ -1,7 +1,7 @@
 import { Component } from 'react';
 
 type Props = {
-  values: string[] | null;
+  values: string[];
   id: string;
 };
 
