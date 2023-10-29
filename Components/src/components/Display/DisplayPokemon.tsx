@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import NamedApiResource from '../../types/namedAPIResource';
 import Pokemon from '../../types/pokemon';
+import './DisplayPokemon.css';
 
 type Props = {
   pokemon: NamedApiResource;
