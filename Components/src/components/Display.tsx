@@ -1,41 +1,34 @@
 import { Component } from 'react';
-import Pokemon from '../types/pokemon';
 import NamedEndpointResponse from '../types/namedEndpointResponse';
+import NamedApiResource from '../types/namedAPIResource';
+import pokemonServise from '../services/pokemon';
+import Pokemon from '../types/pokemon';
+import DisplayPokemon from './DisplayPokemon';
 
 type Props = {
-  page: NamedEndpointResponse<Pokemon> | null;
+  page: NamedEndpointResponse<NamedApiResource> | null;
 };
 
-class Display extends Component<Props> {
+type State = {
+  pokemonData: NamedEndpointResponse<Pokemon> | null;
+};
+
+class Display extends Component<Props, State> {
+  state = {
+    pokemonData: null,
+  };
+
+  async getpokemonData(name: string) {
+    return await pokemonServise.getPokemon(name);
+  }
+
   render() {
     return (
       <div>
         {this.props.page &&
-          this.props.page.results.map((elem) => {
-            return (
-              <div key={elem.id}>
-                <b>{elem.name}</b>
-                <img
-                  src={elem.sprites.front_default}
-                  alt={`${elem.name}'s frontfacing sprite`}
-                />
-                <ul>
-                  <li>Types: {elem.types.map((type) => type.type.name)}</li>
-                  <li>Moves: {elem.moves.map((move) => move.move.name)}</li>
-                  <li>
-                    Stats:
-                    <ul>
-                      {elem.stats.map((stat) => (
-                        <li key={stat.stat.name + stat.base_stat}>
-                          {stat.stat.name}: {stat.base_stat}
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-            );
-          })}
+          this.props.page.results.map((elem) => (
+            <DisplayPokemon pokemon={elem} key={elem.name} />
+          ))}
       </div>
     );
   }
