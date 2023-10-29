@@ -1,10 +1,10 @@
 import { Component } from 'react';
-import pokemonServices from '../services/pokemon';
+import pokemonServices from '../../services/pokemon';
 import SearchTerms from './SearchTerms';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
-import NamedEndpointResponse from '../types/namedEndpointResponse';
-import NamedApiResource from '../types/namedAPIResource';
+import NamedEndpointResponse from '../../types/namedEndpointResponse';
+import NamedApiResource from '../../types/namedAPIResource';
 
 const selectValues = ['Pokemon'];
 const datalistId = 'pokemon-search-terms';

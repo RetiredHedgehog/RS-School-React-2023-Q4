@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Component, ErrorInfo } from 'react';
-import ErorrPopUp from './ErrorPoppUp';
+import ErorrPopUp from './ErrorPopUp';
 
 type State = {
   hasError: boolean;

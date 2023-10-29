@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import NamedEndpointResponse from '../types/namedEndpointResponse';
-import NamedApiResource from '../types/namedAPIResource';
-import Pokemon from '../types/pokemon';
+import NamedEndpointResponse from '../../types/namedEndpointResponse';
+import NamedApiResource from '../../types/namedAPIResource';
+import Pokemon from '../../types/pokemon';
 import DisplayPokemon from './DisplayPokemon';
 
 type Props = {

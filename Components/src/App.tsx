@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import './App.css';
-import Search from './components/Search';
-import Display from './components/Display';
+import Search from './components/Search/Search';
+import Display from './components/Display/Display';
 import NamedEndpointResponse from './types/namedEndpointResponse';
 import pokemonService from './services/pokemon';
 import NamedApiResource from './types/namedAPIResource';

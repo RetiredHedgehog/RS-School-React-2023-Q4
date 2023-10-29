@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import NamedEndpointResponse from '../types/namedEndpointResponse';
-import NamedApiResource from '../types/namedAPIResource';
-import helpers from '../helpers';
+import NamedEndpointResponse from '../../types/namedEndpointResponse';
+import NamedApiResource from '../../types/namedAPIResource';
+import helpers from '../../helpers';
 
 type Props = {
   searchText: string;
