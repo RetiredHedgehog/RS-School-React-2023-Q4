@@ -14,7 +14,6 @@ class ErorrPopUp extends Component<Props> {
 
   render() {
     helpers.saveSearchText('');
-    helpers.saveSearchType('');
 
     return (
       <div className={`error${this.state.isVisible ? ' visible' : ''}`}>

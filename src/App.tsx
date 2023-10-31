@@ -40,15 +40,7 @@ const App = () => {
 
           setPage(page);
         } catch (error: unknown) {
-          if (typeof error === 'string') {
-            setError(new Error(error));
-            return;
-          }
-
-          if (error instanceof Error && error.name !== 'AbortError') {
-            setError(error);
-            return;
-          }
+          helpers.handleFetchError(error, setError);
         }
       };
 
@@ -69,14 +61,18 @@ const App = () => {
     });
 
     return () => controller.abort();
-  }, [offset, limit]);
+  }, []);
 
   const handleSearchButtonClick = async (): Promise<void> => {
     helpers.saveSearchText(searchText);
 
     if (searchText === '') {
-      const page = await pokemonService.getPokemons(0, 10);
-      setPage(page);
+      try {
+        const page = await pokemonService.getPokemons(0, 10);
+        setPage(page);
+      } catch (error: unknown) {
+        helpers.handleFetchError(error, setError);
+      }
     } else {
       setPage({
         count: 1,

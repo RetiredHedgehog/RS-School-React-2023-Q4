@@ -7,24 +7,41 @@ import NamedApiResource from '../types/namedAPIResource';
 const baseUrl = 'https://pokeapi.co/api/v2';
 const DEFAULT_OFFSET = 0;
 const DEFAULT_LIMIT = Number.MAX_SAFE_INTEGER;
+const DEFAULT_PAGE = {
+  count: 0,
+  previous: null,
+  next: null,
+  results: [],
+};
 
 const getPokemons = async (
   offset = DEFAULT_OFFSET,
   limit = DEFAULT_LIMIT
 ): Promise<NamedEndpointResponse<NamedApiResource>> => {
-  const response: Response = await fetch(
-    `${baseUrl}/pokemon/?${new URLSearchParams({
-      offset: offset.toString(),
-      limit: limit.toString(),
-    })}`
-  );
+  try {
+    const response: Response = await fetch(
+      `${baseUrl}/pokemo/?${new URLSearchParams({
+        offset: offset.toString(),
+        limit: limit.toString(),
+      })}`
+    );
 
-  // TODO: custom error, log to console, ErrorBoundary
-  if (!response.ok) {
-    throw new Error(`Request failed with status code ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error: unknown) {
+    if (typeof error === 'string') {
+      throw new Error(error);
+    }
+    if (error instanceof Error && error.name !== 'AbortError') {
+      throw error;
+    }
   }
-
-  return await response.json();
+  return DEFAULT_PAGE;
 };
 
 const getPokemon = async (pokemon: string): Promise<Pokemon> => {

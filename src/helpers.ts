@@ -1,4 +1,4 @@
-const DEFAULT_TYPE = 'Pokemon';
+import React from 'react';
 
 const saveToLocalStorage = (key: string, value: string): void => {
   localStorage.setItem(key, value);
@@ -12,16 +12,8 @@ const saveSearchText = (text: string): void => {
   saveToLocalStorage('searchText', text);
 };
 
-const saveSearchType = (text: string): void => {
-  saveToLocalStorage('searchType', text);
-};
-
 const getSearchText = (): string => {
   return getFromLocalStorage('searchText');
-};
-
-const getSearchType = (): string => {
-  return getFromLocalStorage('searchType') || DEFAULT_TYPE;
 };
 
 const getPokemonUrl = (text: string): string => {
@@ -29,10 +21,24 @@ const getPokemonUrl = (text: string): string => {
   return `${DEFAULT_URL}/${text}`;
 };
 
+const handleFetchError = (
+  error: unknown,
+  setError: (value: React.SetStateAction<Error | null>) => void
+) => {
+  if (typeof error === 'string') {
+    setError(new Error(error));
+    return;
+  }
+
+  if (error instanceof Error && error.name !== 'AbortError') {
+    setError(error);
+    return;
+  }
+};
+
 export default {
-  getSearchType,
   getSearchText,
-  saveSearchType,
   saveSearchText,
   getPokemonUrl,
+  handleFetchError,
 };

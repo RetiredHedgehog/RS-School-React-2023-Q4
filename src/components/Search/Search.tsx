@@ -4,6 +4,7 @@ import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
 import NamedEndpointResponse from '../../types/namedEndpointResponse';
 import Pokemon from '../../types/pokemon';
+import helpers from '../../helpers';
 
 type Props = {
   searchText: string;
@@ -40,15 +41,7 @@ const Search = ({ searchText, onClick, onInputChange }: Props) => {
 
         setSearchTerms(data.results.map((pokemon) => pokemon.name));
       } catch (error: unknown) {
-        if (typeof error === 'string') {
-          setError(new Error(error));
-          return;
-        }
-
-        if (error instanceof Error && error.name !== 'AbortError') {
-          setError(error);
-          return;
-        }
+        helpers.handleFetchError(error, setError);
       }
     };
 
