@@ -3,7 +3,7 @@ type Props = {
   id: string;
 };
 
-function SearchTerms({ values, id }: Props) {
+const SearchTerms = ({ values, id }: Props) => {
   return (
     <datalist id={id}>
       {values?.map((value, index) => {
@@ -11,6 +11,6 @@ function SearchTerms({ values, id }: Props) {
       })}
     </datalist>
   );
-}
+};
 
 export default SearchTerms;

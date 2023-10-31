@@ -24,9 +24,15 @@ const getSearchType = (): string => {
   return getFromLocalStorage('searchType') || DEFAULT_TYPE;
 };
 
+const getPokemonUrl = (text: string): string => {
+  const DEFAULT_URL = 'https://pokeapi.co/api/v2/pokemon';
+  return `${DEFAULT_URL}/${text}`;
+};
+
 export default {
   getSearchType,
   getSearchText,
   saveSearchType,
   saveSearchText,
+  getPokemonUrl,
 };
