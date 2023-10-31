@@ -4,18 +4,18 @@ type Props = {
   id: string;
   searchText: string;
   setSearchText: (text: string) => void;
-  handleSearchTypeChange: (text: string) => void;
+  setSearchType: (text: string) => void;
 };
 
 const SearchInput = ({
   id,
   searchText,
   setSearchText,
-  handleSearchTypeChange,
+  setSearchType,
 }: Props) => {
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>): void => {
     setSearchText(e.currentTarget.value);
-    handleSearchTypeChange(e.currentTarget.value);
+    setSearchType('pokemon');
   };
 
   return (

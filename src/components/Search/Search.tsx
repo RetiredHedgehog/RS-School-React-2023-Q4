@@ -1,29 +1,12 @@
-import { Component } from 'react';
-import pokemonServices from '../../services/pokemon';
+import { useEffect, useState } from 'react';
 import SearchTerms from './SearchTerms';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
 import NamedEndpointResponse from '../../types/namedEndpointResponse';
 import NamedApiResource from '../../types/namedAPIResource';
-
-const selectValues = ['Pokemon'];
-const datalistId = 'pokemon-search-terms';
-
-const findType = (searchTerms: { [key: string]: string[] }, text: string) => {
-  for (const term in searchTerms) {
-    if (Object.hasOwn(searchTerms, term)) {
-      if (searchTerms[term].find((string) => string.includes(text))) {
-        return term;
-      }
-    }
-  }
-
-  return 'pokemon';
-};
+import Pokemon from '../../types/pokemon';
 
 type Props = {
-  limit: number;
-  offset: number;
   setSearchText: (text: string) => void;
   setSearchType: (type: string) => void;
   setPage: (page: NamedEndpointResponse<NamedApiResource>) => void;
@@ -31,80 +14,80 @@ type Props = {
   searchType: string;
 };
 
-type State = {
-  searchTerms: {
-    [key: string]: string[];
-  };
-  error: Error | null;
-};
+const Search = ({
+  setSearchText,
+  setSearchType,
+  setPage,
+  searchText,
+  searchType = 'pokemon',
+}: Props) => {
+  const [searchTerms, setSearchTerms] = useState<string[]>([]);
+  const [error, setError] = useState<Error | null>(null);
 
-class Search extends Component<Props> {
-  state: State = {
-    searchTerms: {},
-    error: null,
-  };
+  useEffect(() => {
+    const controller = new AbortController();
+    const DEFAULT_OFFSET = 0;
+    const DEFAULT_LIMIT = Number.MAX_SAFE_INTEGER;
 
-  setNames = async () => {
-    const methods = [
-      pokemonServices.getPokemons,
-      pokemonServices.getMoves,
-      pokemonServices.getTypes,
-    ];
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/?${new URLSearchParams({
+            offset: DEFAULT_OFFSET.toString(),
+            limit: DEFAULT_LIMIT.toString(),
+          })}`,
 
-    for (let i = 0; i < methods.length; i++) {
-      const response = await methods[i]();
-      const names = response.results.map((elem) => elem.name);
+          {
+            signal: controller.signal,
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText}`);
+        }
 
-      if (selectValues[i] !== undefined) {
-        this.setState({
-          searchTerms: {
-            ...this.state.searchTerms,
-            [selectValues[i].toLowerCase()]: names,
-          },
-        });
+        const data: NamedEndpointResponse<Pokemon> = await response.json();
+
+        setSearchTerms(data.results.map((pokemon) => pokemon.name));
+      } catch (error: unknown) {
+        if (typeof error === 'string') {
+          setError(new Error(error));
+          return;
+        }
+
+        if (error instanceof Error && error.name !== 'AbortError') {
+          setError(error);
+          return;
+        }
       }
-    }
-  };
+    };
 
-  handleSearchTypeChange = (text: string) => {
-    this.props.setSearchType(findType(this.state.searchTerms, text));
-  };
+    fetchData();
 
-  async componentDidMount(): Promise<void> {
-    try {
-      this.setNames();
-    } catch (error) {
-      this.setState({ error });
-    }
+    return () => controller.abort();
+  }, []);
+
+  if (error) {
+    throw error;
   }
 
-  render() {
-    if (this.state.error) {
-      throw this.state.error;
-    }
+  const datalistId = 'pokemon-search-terms';
 
-    const searchTerms = Object.values(this.state.searchTerms).reduce(
-      (acc, arr) => [...acc, ...arr],
-      []
-    );
-
-    return (
-      <div>
-        <SearchInput
-          id={datalistId}
-          searchText={this.props.searchText}
-          setSearchText={this.props.setSearchText}
-          handleSearchTypeChange={this.handleSearchTypeChange}
-        />
-        <SearchButton
-          setPage={this.props.setPage}
-          searchText={this.props.searchText}
-          searchType={this.props.searchType}
-        />
-        <SearchTerms values={searchTerms} id={datalistId} />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <SearchInput
+        id={datalistId}
+        searchText={searchText}
+        setSearchText={setSearchText}
+        setSearchType={setSearchType}
+      />
+      <SearchButton
+        setPage={setPage}
+        searchText={searchText}
+        searchType={searchType}
+      />
+      <SearchTerms values={searchTerms} id={datalistId} />
+    </div>
+  );
+};
 
 export default Search;

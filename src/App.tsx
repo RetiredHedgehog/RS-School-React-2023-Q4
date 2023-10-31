@@ -73,8 +73,6 @@ class App extends Component {
       <>
         <ErrorButton />
         <Search
-          offset={this.state.offset}
-          limit={this.state.limit}
           setSearchText={this.setSearchText}
           setSearchType={this.setSearchType}
           setPage={this.setPage}
