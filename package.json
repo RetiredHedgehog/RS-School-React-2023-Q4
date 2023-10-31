@@ -9,7 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format:fix": "npx prettier . --write --ignore-unknown",
     "preview": "vite preview",
-    "prepare": "cd .. && husky install Components/.husky"
+    "prepare": "husky install .husky"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
