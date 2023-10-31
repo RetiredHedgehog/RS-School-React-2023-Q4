@@ -13,7 +13,6 @@ type State = {
   limit: number;
   offset: number;
   searchText: string;
-  searchType: string;
   error: Error | null;
 };
 
@@ -23,7 +22,6 @@ class App extends Component {
     limit: 10,
     offset: 0,
     searchText: helpers.getSearchText(),
-    searchType: helpers.getSearchType(),
     error: null,
   };
 
@@ -50,9 +48,34 @@ class App extends Component {
     });
   }
 
-  setSearchText = (text: string) => {
+  handleSearchButtonClick = async (): Promise<void> => {
+    const searchText = this?.state.searchText || '';
+
+    helpers.saveSearchText(searchText);
+
+    if (searchText === '') {
+      const page = await pokemonService.getPokemons(0, 10);
+      this.setState({ page: page });
+    } else {
+      this.setState({
+        page: {
+          count: 1,
+          next: null,
+          previous: null,
+          results: [
+            {
+              name: searchText,
+              url: helpers.getPokemonUrl(searchText),
+            },
+          ],
+        },
+      });
+    }
+  };
+
+  onInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     this.setState({
-      searchText: text,
+      searchText: e.currentTarget.value,
     });
   };
 
@@ -62,22 +85,14 @@ class App extends Component {
     });
   };
 
-  setSearchType = (type: string) => {
-    this.setState({
-      searchType: type,
-    });
-  };
-
   render() {
     return (
       <>
         <ErrorButton />
         <Search
-          setSearchText={this.setSearchText}
-          setSearchType={this.setSearchType}
-          setPage={this.setPage}
           searchText={this.state.searchText}
-          searchType={this.state.searchType}
+          onClick={this.handleSearchButtonClick}
+          onInputChange={this.onInputChange}
         />
         <Display page={this.state.page} />
       </>

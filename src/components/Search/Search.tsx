@@ -3,24 +3,15 @@ import SearchTerms from './SearchTerms';
 import SearchInput from './SearchInput';
 import SearchButton from './SearchButton';
 import NamedEndpointResponse from '../../types/namedEndpointResponse';
-import NamedApiResource from '../../types/namedAPIResource';
 import Pokemon from '../../types/pokemon';
 
 type Props = {
-  setSearchText: (text: string) => void;
-  setSearchType: (type: string) => void;
-  setPage: (page: NamedEndpointResponse<NamedApiResource>) => void;
   searchText: string;
-  searchType: string;
+  onClick: () => Promise<void>;
+  onInputChange: (e: React.FormEvent<HTMLInputElement>) => void;
 };
 
-const Search = ({
-  setSearchText,
-  setSearchType,
-  setPage,
-  searchText,
-  searchType = 'pokemon',
-}: Props) => {
+const Search = ({ searchText, onClick, onInputChange }: Props) => {
   const [searchTerms, setSearchTerms] = useState<string[]>([]);
   const [error, setError] = useState<Error | null>(null);
 
@@ -77,14 +68,9 @@ const Search = ({
       <SearchInput
         id={datalistId}
         searchText={searchText}
-        setSearchText={setSearchText}
-        setSearchType={setSearchType}
+        onInputChange={onInputChange}
       />
-      <SearchButton
-        setPage={setPage}
-        searchText={searchText}
-        searchType={searchType}
-      />
+      <SearchButton onClick={onClick} />
       <SearchTerms values={searchTerms} id={datalistId} />
     </div>
   );

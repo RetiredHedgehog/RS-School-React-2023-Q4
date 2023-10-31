@@ -2,6 +2,7 @@ import NamedEndpointResponse from '../types/namedEndpointResponse';
 import Pokemon from '../types/pokemon';
 import Move from '../types/move';
 import Type from '../types/type';
+import NamedApiResource from '../types/namedAPIResource';
 
 const baseUrl = 'https://pokeapi.co/api/v2';
 const DEFAULT_OFFSET = 0;
@@ -10,7 +11,7 @@ const DEFAULT_LIMIT = Number.MAX_SAFE_INTEGER;
 const getPokemons = async (
   offset = DEFAULT_OFFSET,
   limit = DEFAULT_LIMIT
-): Promise<NamedEndpointResponse<Pokemon>> => {
+): Promise<NamedEndpointResponse<NamedApiResource>> => {
   const response: Response = await fetch(
     `${baseUrl}/pokemon/?${new URLSearchParams({
       offset: offset.toString(),
