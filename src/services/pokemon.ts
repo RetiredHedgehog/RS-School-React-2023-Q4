@@ -20,7 +20,7 @@ const getPokemons = async (
 ): Promise<NamedEndpointResponse<NamedApiResource>> => {
   try {
     const response: Response = await fetch(
-      `${baseUrl}/pokemo/?${new URLSearchParams({
+      `${baseUrl}/pokemon/?${new URLSearchParams({
         offset: offset.toString(),
         limit: limit.toString(),
       })}`

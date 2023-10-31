@@ -1,4 +1,4 @@
-import { Component, ErrorInfo } from 'react';
+import { ErrorInfo, useState } from 'react';
 import helpers from '../../helpers';
 import './ErrorPopUp.css';
 
@@ -7,27 +7,27 @@ type Props = {
   errorInfo: ErrorInfo | null;
 };
 
-class ErorrPopUp extends Component<Props> {
-  state = {
-    isVisible: true,
-  };
-
-  render() {
-    helpers.saveSearchText('');
-
-    return (
-      <div className={`error${this.state.isVisible ? ' visible' : ''}`}>
-        <h2>An error occured! Check console for more info!</h2>
-        <button
-          onClick={() => {
-            this.setState({ isVisible: false });
-          }}
-        >
-          Close popup
-        </button>
-      </div>
-    );
-  }
-}
+const ErorrPopUp = ({ error }: Props) => {
+  const [isVisible, setIsVisible] = useState(true);
+  helpers.saveSearchText('');
+  return (
+    <div className={`error${isVisible ? ' visible' : ''}`}>
+      <h2>An error occured!</h2>
+      {error instanceof Error && (
+        <>
+          <p>{`Name: ${error.name}`}</p>
+          <p>{`Message: ${error.message}`}</p>
+        </>
+      )}
+      <button
+        onClick={() => {
+          setIsVisible(false);
+        }}
+      >
+        Close popup
+      </button>
+    </div>
+  );
+};
 
 export default ErorrPopUp;
