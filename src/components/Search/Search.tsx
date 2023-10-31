@@ -91,7 +91,7 @@ class Search extends Component<Props> {
     return (
       <div>
         <SearchInput
-          datalistId={datalistId}
+          id={datalistId}
           searchText={this.props.searchText}
           setSearchText={this.props.setSearchText}
           handleSearchTypeChange={this.handleSearchTypeChange}

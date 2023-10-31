@@ -1,29 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 type Props = {
-  datalistId: string;
+  id: string;
   searchText: string;
   setSearchText: (text: string) => void;
   handleSearchTypeChange: (text: string) => void;
 };
 
-class SearchInput extends Component<Props> {
-  handleTextChange = (e: React.FormEvent<HTMLInputElement>): void => {
-    this.props.setSearchText(e.currentTarget.value);
-    this.props.handleSearchTypeChange(e.currentTarget.value);
+const SearchInput = ({
+  id,
+  searchText,
+  setSearchText,
+  handleSearchTypeChange,
+}: Props) => {
+  const handleInputChange = (e: React.FormEvent<HTMLInputElement>): void => {
+    setSearchText(e.currentTarget.value);
+    handleSearchTypeChange(e.currentTarget.value);
   };
 
-  render() {
-    return (
-      <input
-        type="text"
-        placeholder="Enter pokemon name..."
-        list={this.props.datalistId}
-        value={this.props.searchText}
-        onChange={this.handleTextChange}
-      />
-    );
-  }
-}
+  return (
+    <input
+      type="text"
+      placeholder="Enter pokemon name..."
+      list={id}
+      value={searchText}
+      onChange={handleInputChange}
+    />
+  );
+};
 
 export default SearchInput;
