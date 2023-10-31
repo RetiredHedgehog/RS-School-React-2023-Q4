@@ -5,6 +5,8 @@ import SearchButton from './SearchButton';
 import NamedEndpointResponse from '../../types/namedEndpointResponse';
 import Pokemon from '../../types/pokemon';
 import helpers from '../../helpers';
+import ErrorButton from './ErrorButton';
+import styles from './Search.module.css';
 
 type Props = {
   searchText: string;
@@ -57,13 +59,14 @@ const Search = ({ searchText, onClick, onInputChange }: Props) => {
   const datalistId = 'pokemon-search-terms';
 
   return (
-    <div>
+    <div className={styles.search}>
       <SearchInput
         id={datalistId}
         searchText={searchText}
         onInputChange={onInputChange}
       />
       <SearchButton onClick={onClick} />
+      <ErrorButton />
       <SearchTerms values={searchTerms} id={datalistId} />
     </div>
   );

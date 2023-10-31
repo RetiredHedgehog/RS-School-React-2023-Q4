@@ -1,0 +1,28 @@
+.search {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  min-height: 5dvh;
+  background-color: rgb(240, 240, 240);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.search > *:not(:first-child) {
+  margin-left: 1rem;
+}
+
+.input {
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  outline: transparent solid 1px;
+  text-align: center;
+}
+
+.input:focus,
+.input:hover {
+  outline: #646cff solid 1px;
+  transition: outline-color 0.25s;
+}

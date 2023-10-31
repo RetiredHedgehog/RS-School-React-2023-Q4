@@ -6,7 +6,6 @@ import NamedEndpointResponse from './types/namedEndpointResponse';
 import pokemonService from './services/pokemon';
 import NamedApiResource from './types/namedAPIResource';
 import helpers from './helpers';
-import ErrorButton from './components/ErrorButton';
 
 const App = () => {
   const [limit] = useState(10);
@@ -98,7 +97,6 @@ const App = () => {
 
   return (
     <>
-      <ErrorButton />
       <Search
         searchText={searchText}
         onClick={handleSearchButtonClick}

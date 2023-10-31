@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import NamedApiResource from '../../types/namedAPIResource';
 import Pokemon from '../../types/pokemon';
-import './DisplayPokemon.css';
+import styles from './Display.module.css';
 
 type Props = {
   pokemon: NamedApiResource;
@@ -44,7 +44,7 @@ class DisplayPokemon extends Component<Props> {
 
     return (
       pokemon && (
-        <div key={pokemon.id} className="pokemon">
+        <div key={pokemon.id} className={styles.pokemon}>
           <b>{pokemon.name}</b>
           <img
             src={pokemon.sprites.front_default}

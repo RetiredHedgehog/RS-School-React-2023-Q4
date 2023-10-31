@@ -1,5 +1,5 @@
 import React from 'react';
-
+import styles from './Search.module.css';
 type Props = {
   id: string;
   searchText: string;
@@ -9,6 +9,7 @@ type Props = {
 const SearchInput = ({ id, searchText, onInputChange }: Props) => {
   return (
     <input
+      className={styles.input}
       type="text"
       placeholder="Enter pokemon name..."
       list={id}
