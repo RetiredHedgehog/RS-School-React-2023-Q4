@@ -20,30 +20,35 @@ const App = () => {
     const controller = new AbortController();
 
     if (!searchText) {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/?${new URLSearchParams({
-              offset: offset.toString(),
-              limit: limit.toString(),
-            })}`,
-            {
-              signal: controller.signal,
-            }
-          );
-          if (!response.ok) {
-            throw new Error(`${response.status} ${response.statusText}`);
-          }
-          const page: NamedEndpointResponse<NamedApiResource> =
-            await response.json();
+      pokemonService
+        .getPokemons(setError, controller, offset, limit)
+        .then((data) => setPage(data));
+    } else {
+      setPage({
+        count: 1,
+        next: null,
+        previous: null,
+        results: [
+          {
+            name: searchText,
+            url: `https://pokeapi.co/api/v2/pokemon/${searchText}`,
+          },
+        ],
+      });
+    }
+    return () => controller.abort();
+  }, []);
 
-          setPage(page);
-        } catch (error: unknown) {
-          helpers.handleFetchError(error, setError);
-        }
-      };
+  const handleSearchButtonClick = async (): Promise<void> => {
+    helpers.saveSearchText(searchText);
 
-      fetchData();
+    if (searchText === '') {
+      try {
+        const page = await pokemonService.getPokemons(setError, null, 0, 10);
+        setPage(page);
+      } catch (error: unknown) {
+        helpers.handleFetchError(error, setError);
+      }
       return;
     }
 
@@ -54,37 +59,10 @@ const App = () => {
       results: [
         {
           name: searchText,
-          url: `https://pokeapi.co/api/v2/pokemon/${searchText}`,
+          url: helpers.getPokemonUrl(searchText),
         },
       ],
     });
-
-    return () => controller.abort();
-  }, []);
-
-  const handleSearchButtonClick = async (): Promise<void> => {
-    helpers.saveSearchText(searchText);
-
-    if (searchText === '') {
-      try {
-        const page = await pokemonService.getPokemons(0, 10);
-        setPage(page);
-      } catch (error: unknown) {
-        helpers.handleFetchError(error, setError);
-      }
-    } else {
-      setPage({
-        count: 1,
-        next: null,
-        previous: null,
-        results: [
-          {
-            name: searchText,
-            url: helpers.getPokemonUrl(searchText),
-          },
-        ],
-      });
-    }
   };
 
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {

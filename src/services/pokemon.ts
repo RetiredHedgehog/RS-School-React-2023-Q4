@@ -3,6 +3,8 @@ import Pokemon from '../types/pokemon';
 import Move from '../types/move';
 import Type from '../types/type';
 import NamedApiResource from '../types/namedAPIResource';
+import helpers from '../helpers';
+import React from 'react';
 
 const baseUrl = 'https://pokeapi.co/api/v2';
 const DEFAULT_OFFSET = 0;
@@ -15,15 +17,20 @@ const DEFAULT_PAGE = {
 };
 
 const getPokemons = async (
+  setError: (value: React.SetStateAction<Error | null>) => void,
+  controller: AbortController | null = null,
   offset = DEFAULT_OFFSET,
   limit = DEFAULT_LIMIT
 ): Promise<NamedEndpointResponse<NamedApiResource>> => {
   try {
     const response: Response = await fetch(
       `${baseUrl}/pokemon/?${new URLSearchParams({
-        offset: offset.toString(),
-        limit: limit.toString(),
-      })}`
+        offset: offset?.toString(),
+        limit: limit?.toString(),
+      })}`,
+      {
+        signal: controller?.signal,
+      }
     );
 
     if (!response.ok) {
@@ -34,12 +41,7 @@ const getPokemons = async (
 
     return data;
   } catch (error: unknown) {
-    if (typeof error === 'string') {
-      throw new Error(error);
-    }
-    if (error instanceof Error && error.name !== 'AbortError') {
-      throw error;
-    }
+    helpers.handleFetchError(error, setError);
   }
   return DEFAULT_PAGE;
 };
