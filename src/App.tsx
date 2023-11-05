@@ -12,14 +12,18 @@ const App = () => {
   const [offset] = useState(0);
   const [page, setPage] =
     useState<NamedEndpointResponse<NamedApiResource> | null>(null);
+  const [searchTerms, setSearchTerms] = useState<string[]>([]);
   const [searchText, setSearchText] = useState(helpers.getSearchText());
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const searchText = helpers.getSearchText();
-    const controller = new AbortController();
+    const controllers: AbortController[] = [];
 
     if (!searchText) {
+      const controller = new AbortController();
+      controllers.push(controller);
+      controllers.push();
       pokemonService
         .getPokemons(setError, controller, offset, limit)
         .then((data) => setPage(data));
@@ -36,7 +40,14 @@ const App = () => {
         ],
       });
     }
-    return () => controller.abort();
+    const controller = new AbortController();
+    controllers.push(controller);
+    pokemonService
+      .getPokemons(setError, controller)
+      .then((data) =>
+        setSearchTerms(data.results.map((pokemon) => pokemon.name).sort())
+      );
+    return () => controllers.forEach((controller) => controller.abort());
   }, []);
 
   const handleSearchButtonClick = async (): Promise<void> => {
@@ -77,6 +88,7 @@ const App = () => {
     <>
       <Search
         searchText={searchText}
+        searchTerms={searchTerms}
         onClick={handleSearchButtonClick}
         onInputChange={handleInputChange}
       />
