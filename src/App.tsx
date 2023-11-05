@@ -20,40 +20,42 @@ const App = () => {
     const searchText = helpers.getSearchText();
     const controllers: AbortController[] = [];
 
-    if (!searchText) {
-      const controller = new AbortController();
-      controllers.push(controller);
-      controllers.push();
-      pokemonService
-        .getPokemons(setError, controller, offset, limit)
-        .then((data) => setPage(data));
-    } else {
-      setPage({
-        count: 1,
-        next: null,
-        previous: null,
-        results: [
-          {
-            name: searchText,
-            url: `https://pokeapi.co/api/v2/pokemon/${searchText}`,
-          },
-        ],
-      });
-    }
     const controller = new AbortController();
     controllers.push(controller);
     pokemonService
       .getPokemons(setError, controller)
-      .then((data) =>
-        setSearchTerms(data.results.map((pokemon) => pokemon.name).sort())
-      );
+      .then((data) => {
+        const names = data.results.map((pokemon) => pokemon.name).sort();
+        setSearchTerms(names);
+        return names;
+      })
+      .then((names) => {
+        if (!searchText) {
+          const controller = new AbortController();
+          controllers.push(controller);
+          controllers.push();
+          pokemonService
+            .getPokemons(setError, controller, offset, limit)
+            .then((data) => setPage(data));
+        } else {
+          const results = helpers.partialSearch(names, searchText);
+
+          setPage({
+            count: results.length,
+            next: null,
+            previous: null,
+            results,
+          });
+        }
+      });
+
     return () => controllers.forEach((controller) => controller.abort());
   }, []);
 
   const handleSearchButtonClick = async (): Promise<void> => {
     helpers.saveSearchText(searchText);
 
-    if (searchText === '') {
+    if (!searchText) {
       try {
         const page = await pokemonService.getPokemons(setError, null, 0, 10);
         setPage(page);
@@ -63,16 +65,13 @@ const App = () => {
       return;
     }
 
+    const results = helpers.partialSearch(searchTerms, searchText);
+
     setPage({
-      count: 1,
+      count: results.length,
       next: null,
       previous: null,
-      results: [
-        {
-          name: searchText,
-          url: helpers.getPokemonUrl(searchText),
-        },
-      ],
+      results,
     });
   };
 

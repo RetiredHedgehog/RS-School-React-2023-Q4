@@ -36,9 +36,24 @@ const handleFetchError = (
   }
 };
 
+const partialSearch = (arr: string[], str: string) => {
+  const results: { name: string; url: string }[] = [];
+  for (const name of arr) {
+    if (name.includes(str)) {
+      results.push({
+        name,
+        url: getPokemonUrl(name),
+      });
+    }
+  }
+
+  return results;
+};
+
 export default {
   getSearchText,
   saveSearchText,
   getPokemonUrl,
   handleFetchError,
+  partialSearch,
 };
