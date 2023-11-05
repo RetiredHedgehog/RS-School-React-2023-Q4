@@ -1,7 +1,7 @@
 type NamedEndpointResponse<T> = {
   count: number;
-  next: string | null;
-  previous: string | null;
+  next: string | number | null;
+  previous: string | number | null;
   results: T[];
 };
 

@@ -6,17 +6,22 @@ import NamedEndpointResponse from './types/namedEndpointResponse';
 import pokemonService from './services/pokemon';
 import NamedApiResource from './types/namedAPIResource';
 import helpers from './helpers';
+import Pagination from './components/Pagination';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const App = () => {
-  const [limit] = useState(10);
-  const [offset] = useState(0);
+  const location = useLocation();
+  const history = useNavigate();
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(
+    (Number(new URLSearchParams(location.search).get('p')) || 0) * limit
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] =
     useState<NamedEndpointResponse<NamedApiResource> | null>(null);
   const [searchTerms, setSearchTerms] = useState<string[]>([]);
   const [searchText, setSearchText] = useState(helpers.getSearchText());
   const [error, setError] = useState<Error | null>(null);
-
   useEffect(() => {
     setIsLoading(true);
     const searchText = helpers.getSearchText();
@@ -49,21 +54,36 @@ const App = () => {
             count: results.length,
             next: null,
             previous: null,
-            results,
+            results: results.slice(
+              offset > results.length ? results.length - 1 : offset,
+              offset + limit
+            ),
           });
           setIsLoading(false);
         }
       });
 
     return () => controllers.forEach((controller) => controller.abort());
-  }, []);
+  }, [limit, offset]);
 
   const handleSearchButtonClick = async (): Promise<void> => {
     setIsLoading(true);
     helpers.saveSearchText(searchText);
+
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('p', (0).toString());
+    history(`?${searchParams.toString()}`);
+
+    setOffset(0);
+
     if (!searchText) {
       try {
-        const page = await pokemonService.getPokemons(setError, null, 0, 10);
+        const page = await pokemonService.getPokemons(
+          setError,
+          null,
+          offset,
+          limit
+        );
         setPage(page);
         setIsLoading(false);
       } catch (error: unknown) {
@@ -74,11 +94,15 @@ const App = () => {
 
     const results = helpers.partialSearch(searchTerms, searchText);
 
+    // TODO: ADD MANUAL PAGINATION
     setPage({
       count: results.length,
       next: null,
       previous: null,
-      results,
+      results: results.slice(
+        offset > results.length ? results.length - 1 : offset,
+        offset + limit
+      ),
     });
     setIsLoading(false);
   };
@@ -100,6 +124,12 @@ const App = () => {
         onInputChange={handleInputChange}
       />
       <Display page={page} isLoading={isLoading} />
+      <Pagination
+        limit={limit}
+        offset={offset}
+        setOffset={setOffset}
+        setLimit={setLimit}
+      />
     </>
   );
 };
