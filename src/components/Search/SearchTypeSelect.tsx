@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 type Props = {
   searchType: string;
@@ -6,18 +6,16 @@ type Props = {
   selectValues: string[];
 };
 
-class SearchTypeSelect extends Component<Props> {
-  render() {
-    return (
-      <select value={this.props.searchType} onChange={this.props.onChange}>
-        {this.props.selectValues.map((value, index) => (
-          <option key={index} value={value.toLowerCase()}>
-            {value}
-          </option>
-        ))}
-      </select>
-    );
-  }
-}
+const SearchTypeSelect = ({ searchType, onChange, selectValues }: Props) => {
+  return (
+    <select value={searchType} onChange={onChange}>
+      {selectValues.map((value, index) => (
+        <option key={index} value={value.toLowerCase()}>
+          {value}
+        </option>
+      ))}
+    </select>
+  );
+};
 
 export default SearchTypeSelect;
