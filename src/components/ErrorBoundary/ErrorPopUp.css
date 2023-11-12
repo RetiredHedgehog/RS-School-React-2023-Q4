@@ -1,0 +1,17 @@
+.error {
+  display: none;
+  position: fixed;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  width: 50%;
+  height: 50%;
+  background-color: #ebdddd;
+}
+
+.error.visible {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
