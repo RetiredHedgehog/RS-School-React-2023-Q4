@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from './Search.module.css';
+import SearchTextContext from '../../context';
 type Props = {
   id: string;
-  searchText: string;
   onInputChange: (e: React.FormEvent<HTMLInputElement>) => void;
 };
 
-const SearchInput = ({ id, searchText, onInputChange }: Props) => {
+const SearchInput = ({ id, onInputChange }: Props) => {
+  const searchText = useContext(SearchTextContext);
   return (
     <input
       className={styles.input}

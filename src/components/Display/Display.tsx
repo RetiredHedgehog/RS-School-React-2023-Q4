@@ -1,14 +1,14 @@
-import NamedEndpointResponse from '../../types/namedEndpointResponse';
-import NamedApiResource from '../../types/namedAPIResource';
 import DisplayPokemon from './DisplayPokemon';
 import styles from './Display.module.css';
+import Context from '../../context';
+import { useContext } from 'react';
 
 type Props = {
   isLoading: boolean;
-  page: NamedEndpointResponse<NamedApiResource> | null;
 };
 
-const Display = ({ isLoading, page }: Props) => {
+const Display = ({ isLoading }: Props) => {
+  const { page } = useContext(Context);
   return isLoading ? (
     <p>Loading...</p>
   ) : (

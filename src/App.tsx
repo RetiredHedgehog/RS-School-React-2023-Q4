@@ -8,6 +8,7 @@ import NamedApiResource from './types/namedAPIResource';
 import helpers from './helpers';
 import Pagination from './components/Pagination';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Context from './context';
 
 const App = () => {
   const location = useLocation();
@@ -94,7 +95,6 @@ const App = () => {
 
     const results = helpers.partialSearch(searchTerms, searchText);
 
-    // TODO: ADD MANUAL PAGINATION
     setPage({
       count: results.length,
       next: null,
@@ -116,21 +116,25 @@ const App = () => {
   }
 
   return (
-    <>
+    <Context.Provider
+      value={{
+        searchText,
+        page,
+      }}
+    >
       <Search
-        searchText={searchText}
         searchTerms={searchTerms}
         onClick={handleSearchButtonClick}
         onInputChange={handleInputChange}
       />
-      <Display page={page} isLoading={isLoading} />
+      <Display isLoading={isLoading} />
       <Pagination
         limit={limit}
         offset={offset}
         setOffset={setOffset}
         setLimit={setLimit}
       />
-    </>
+    </Context.Provider>
   );
 };
 
