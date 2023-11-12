@@ -13,11 +13,6 @@
     "prepare": "husky install .husky",
     "coverage": "vitest run --coverage"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run test"
-    }
-  },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
   },
