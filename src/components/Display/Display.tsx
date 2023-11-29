@@ -3,12 +3,8 @@ import styles from './Display.module.css';
 import Context from '../../context';
 import { useContext } from 'react';
 
-type Props = {
-  isLoading: boolean;
-};
-
-const Display = ({ isLoading }: Props) => {
-  const { page } = useContext(Context);
+const Display = () => {
+  const { page, isLoading } = useContext(Context);
   return isLoading ? (
     <p>Loading...</p>
   ) : (

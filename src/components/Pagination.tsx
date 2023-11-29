@@ -1,21 +1,22 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
+import React, { useContext } from 'react';
+import Context from '../context';
 
-type Props = {
-  limit: number;
-  offset: number;
-  setOffset: React.Dispatch<React.SetStateAction<number>>;
-  setLimit: React.Dispatch<React.SetStateAction<number>>;
-};
-
-const Pagination = ({ limit, offset, setOffset, setLimit }: Props) => {
-  const location = useLocation();
-  const history = useNavigate();
-
+const Pagination = () => {
+  const router = useRouter();
+  const { offset, limit, setLimit } = useContext(Context);
   const handleLocationChange = (offset: number, limit: number) => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set('p', Math.floor(offset / limit).toString());
-    history(`?${searchParams.toString()}`);
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          p: Math.floor(offset / limit).toString(),
+        },
+      },
+      undefined,
+      {}
+    );
   };
 
   const handleClick = (action: string) => {
@@ -28,14 +29,12 @@ const Pagination = ({ limit, offset, setOffset, setLimit }: Props) => {
         newOffset = offset + limit;
         break;
     }
-    setOffset(newOffset);
     handleLocationChange(newOffset, limit);
   };
 
   const handleSelectChange = (e: React.FormEvent<HTMLSelectElement>) => {
     const limit = Number(e.currentTarget.value);
     handleLocationChange(0, limit);
-    setOffset(0);
     setLimit(limit);
   };
 

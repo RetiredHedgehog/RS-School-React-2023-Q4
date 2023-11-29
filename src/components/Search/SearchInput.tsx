@@ -7,7 +7,7 @@ type Props = {
 };
 
 const SearchInput = ({ id, onInputChange }: Props) => {
-  const searchText = useContext(SearchTextContext);
+  const { searchText } = useContext(SearchTextContext);
   return (
     <input
       className={styles.input}

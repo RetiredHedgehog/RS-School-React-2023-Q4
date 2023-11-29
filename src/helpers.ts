@@ -1,11 +1,19 @@
 import React from 'react';
 
 const saveToLocalStorage = (key: string, value: string): void => {
-  localStorage.setItem(key, value);
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(key, value);
+  }
 };
 
 const getFromLocalStorage = (key: string): string => {
-  return localStorage.getItem(key) || '';
+  let response = '';
+
+  if (typeof window !== 'undefined') {
+    response = window.localStorage.getItem(key) || '';
+  }
+
+  return response;
 };
 
 const saveSearchText = (text: string): void => {
@@ -36,8 +44,10 @@ const handleFetchError = (
   }
 };
 
-const partialSearch = (arr: string[], str: string) => {
-  const results: { name: string; url: string }[] = [];
+type PartialSearch = { name: string; url: string }[];
+
+const partialSearch = (arr: string[], str: string): PartialSearch => {
+  const results: PartialSearch = [];
   for (const name of arr) {
     if (name.includes(str)) {
       results.push({

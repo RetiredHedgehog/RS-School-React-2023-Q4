@@ -1,23 +1,24 @@
 import SearchTerms from './SearchTerms';
 import SearchInput from './SearchInput';
-import SearchButton from './SearchButton';
-import ErrorButton from './ErrorButton';
 import styles from './Search.module.css';
+import { useContext, useState } from 'react';
+import Context from '../../context';
+import Button from './Button';
 
-type Props = {
-  searchTerms: string[];
-  onClick: () => Promise<void>;
-  onInputChange: (e: React.FormEvent<HTMLInputElement>) => void;
-};
-
-const Search = ({ searchTerms, onClick, onInputChange }: Props) => {
+const Search = () => {
+  const [hasError, setHasError] = useState<boolean>(false);
   const datalistId = 'pokemon-search-terms';
+  const { searchTerms, handleInputChange, handleSearchButtonClick } =
+    useContext(Context);
 
+  if (hasError) {
+    throw new Error('This is a test error');
+  }
   return (
     <div className={styles.search}>
-      <SearchInput id={datalistId} onInputChange={onInputChange} />
-      <SearchButton onClick={onClick} />
-      <ErrorButton />
+      <SearchInput id={datalistId} onInputChange={handleInputChange} />
+      <Button onClick={handleSearchButtonClick}>Search</Button>
+      <Button onClick={() => setHasError(true)}>Throw error</Button>
       <SearchTerms values={searchTerms} id={datalistId} />
     </div>
   );
