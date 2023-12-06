@@ -5,9 +5,9 @@ type State = {
   userForm: UserSchema;
 };
 
-const initialState = <State>{
+const initialState = {
   userForm: {},
-};
+} as State;
 
 export const formSlice = createSlice({
   name: 'form',

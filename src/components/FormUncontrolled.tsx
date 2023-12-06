@@ -44,8 +44,6 @@ const FormUncontrolled = () => {
       }
     }
 
-    return;
-    dispatch(submitted(data));
     alert('form submitted');
     navigate('/');
   };
