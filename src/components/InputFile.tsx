@@ -7,7 +7,7 @@ const InputFile = ({
   return (
     <div>
       <label htmlFor={name}>{children}</label>
-      <input {...props} type="file" id={name} />
+      <input {...props} type="file" name={name} id={name} />
     </div>
   );
 };

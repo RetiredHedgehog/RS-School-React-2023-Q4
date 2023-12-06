@@ -5,17 +5,47 @@ import InputSelect from './InputSelect';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import InputFile from './InputFile';
 import { submitted } from '../store/userFormSlice';
-
+import userSchema from '../shcema/user';
+import { ValidationError } from 'yup';
 const FormUncontrolled = () => {
   const dispatch = useAppDispatch();
   const { countries } = useAppSelector((state) => state.countries);
   const navigate = useNavigate();
   const form = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const fileToBase64 = async (file: File): Promise<string> =>
+    new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(file);
+    });
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(form.current || undefined);
-    dispatch(submitted(Object.fromEntries(formData.entries())));
+    const data = Object.fromEntries(formData.entries());
+    try {
+      const validationData = await userSchema.validate(data, {
+        abortEarly: false,
+      });
+
+      if (validationData) {
+        const file = await fileToBase64(validationData.file as File);
+        console.log('file', file);
+        dispatch(submitted({ ...validationData, file }));
+      }
+    } catch (exeption) {
+      if (exeption instanceof ValidationError) {
+        const exeptions: { [key: string]: string } = {};
+        exeption.inner.forEach((exep) => {
+          exeptions[exep.path as string] = exep.message;
+        });
+        console.log(exeption);
+      }
+    }
+
+    return;
+    dispatch(submitted(data));
     alert('form submitted');
     navigate('/');
   };
@@ -34,7 +64,7 @@ const FormUncontrolled = () => {
           required
         />
         <InputText
-          name="passwordRepeat"
+          name="confirmPassword"
           labelText="Repeat Password"
           autoComplete="off"
           required
@@ -59,8 +89,15 @@ const FormUncontrolled = () => {
           File
         </InputFile>
         <div>
-          <label htmlFor="t&c">I accept terms and conditions</label>
-          <input id="t&c" type="checkbox" required />
+          <label htmlFor="termsAndConditions">
+            I accept terms and conditions
+          </label>
+          <input
+            name="termsAndConditions"
+            id="termsAndConditions"
+            type="checkbox"
+            required
+          />
         </div>
         <input type="submit" value="Submit" />
       </form>

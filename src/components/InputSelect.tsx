@@ -11,7 +11,7 @@ const InputSelect = ({ name, options, children, ...props }: Props) => {
   return (
     <div>
       <label htmlFor={name}>{children}</label>
-      <select id={name} {...props}>
+      <select name={name} id={name} {...props}>
         {options.map((option) => (
           <option value={option} key={option}>
             {capitalize(option)}

@@ -1,15 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { UserSchema } from '../shcema/user';
 
 type State = {
-  userForm: {
-    name: string;
-    age: number;
-    email: string;
-    password: string;
-    gender: string;
-    country: string;
-    file: File;
-  };
+  userForm: UserSchema;
 };
 
 const initialState = <State>{
