@@ -1,15 +1,21 @@
 import { FormEvent, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import countries from '../countries.json';
 import InputText from './InputText';
-import Select from './Select';
+import InputSelect from './InputSelect';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import InputFile from './InputFile';
+import { submitted } from '../store/userFormSlice';
 
 const FormUncontrolled = () => {
+  const dispatch = useAppDispatch();
+  const { countries } = useAppSelector((state) => state.countries);
   const navigate = useNavigate();
   const form = useRef<HTMLFormElement>(null);
-  console.log(form);
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const formData = new FormData(form.current || undefined);
+    dispatch(submitted(Object.fromEntries(formData.entries())));
     alert('form submitted');
     navigate('/');
   };
@@ -33,9 +39,9 @@ const FormUncontrolled = () => {
           autoComplete="off"
           required
         />
-        <Select name="gender" options={['male', 'female', 'other']}>
+        <InputSelect name="gender" options={['male', 'female', 'other']}>
           Gender
-        </Select>
+        </InputSelect>
         <InputText
           name="country"
           labelText="Country"
@@ -49,6 +55,9 @@ const FormUncontrolled = () => {
             ))}
           </datalist>
         </InputText>
+        <InputFile name="file" required>
+          File
+        </InputFile>
         <div>
           <label htmlFor="t&c">I accept terms and conditions</label>
           <input id="t&c" type="checkbox" required />

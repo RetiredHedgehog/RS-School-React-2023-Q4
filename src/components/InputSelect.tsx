@@ -7,11 +7,11 @@ type Props = {
 const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
-const Select = ({ name, options, children }: Props) => {
+const InputSelect = ({ name, options, children, ...props }: Props) => {
   return (
     <div>
       <label htmlFor={name}>{children}</label>
-      <select id={name}>
+      <select id={name} {...props}>
         {options.map((option) => (
           <option value={option} key={option}>
             {capitalize(option)}
@@ -22,4 +22,4 @@ const Select = ({ name, options, children }: Props) => {
   );
 };
 
-export default Select;
+export default InputSelect;
